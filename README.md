@@ -8,7 +8,7 @@ These instructions will help you connect your Raspberry Pi Pico W to the interne
 * Three LEDs on the add-on board
 * A MQTT server app
 ### Connecting to WiFi
-1. Follow the Pico documentation to write the code for connecting to WiFi. [documentation for connecting to a wireless network]([https://www.google.com](https://datasheets.raspberrypi.com/picow/connecting-to-the-internet-with-pico-w.pdf))
+1. Follow the Pico documentation to write the code for connecting to WiFi. [documentation for connecting to a wireless network](https://datasheets.raspberrypi.com/picow/connecting-to-the-internet-with-pico-w.pdf)
 2. Once connected, print out the IP address of the Pico to the Shell.
 ### Installing umqtt simple module
 Use the following command to install the umqtt simple module:
