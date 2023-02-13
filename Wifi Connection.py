@@ -1,11 +1,11 @@
 import network
 import time
 
-ssid = 'KME662'
-password = 'SmartIot'
+ssid = 'KME662' # home: DNA-WLAN-2G-8008 - School: KME662
+password = 'SmartIot' # home: 60846109170 - School: SmartIot
 
 
-def checkConnection():
+def connectWifi():
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     wlan.connect(ssid, password)
