@@ -1,39 +1,45 @@
-import time
 from machine import Pin, Timer
 from umqtt.simple import MQTTClient
 from WifiConnection import connectWifi
 from JsonController import readJson
-from OledController import displayOled
+from OledController import displayOled, updateIP, updateLedInfo
+from LedController import controllLed
 
-# Set up the button and light pins as inputs and outputs
+# Set up the button as inputs
 button = Pin(8, Pin.IN, Pin.PULL_UP)
 #
 IP = connectWifi() # ip address
+updateIP(IP)
 topic = b"Phuong/LED"
-c = MQTTClient(b"phuong", b"broker.hivemq.com")
-"""
+#c = MQTTClient(b"phuong", b"broker.hivemq.com") # local boker
+
+# cloud
 c = MQTTClient(client_id=b"bigles",
-    server=b"broker.hivemq.com", # home: bec3bbc6c9c44b4fae7e5a42781338c5.s2.eu.hivemq.cloud - school: 192.168.1.254
-    port=8883, #home: 8883 - school: ''
-    user=None, #home: tester - school: ''
-    password=None, #home: 12345678 - school: ''
+    server=b"<your cloud>", 
+    port=8883, 
+    user=b"<your user name>", 
+    password=b"<your password>", 
     keepalive=3600,
     ssl=True,
-    ssl_params={'server_hostname':'broker.hivemq.com'} # home: bec3bbc6c9c44b4fae7e5a42781338c5.s2.eu.hivemq.cloud - school: ''
+    ssl_params={'server_hostname':'<your cloud>'} 
 )
-"""
+
 c.connect()
 # callback for received subscription messages
 def sub_cb(topic, msg):
-    print((topic, msg))
-    # controll led here
+    #print((topic, msg))
+    newData = msg.decode() # convert binary to string
+    updateLedInfo(newData) # update LED info
+    # get led name and level for controll level of led
+    LedName = newData[0:2]
+    LedLevel = newData[3:-1]
+    controllLed(LedName, LedLevel)
 
 # Publish a message.
 def publishMsg():
     c.publish(topic, readJson())
     
 def listenBroker():
-    print(IP)
     c.set_callback(sub_cb)
     c.subscribe(topic)
     tim = Timer()
@@ -42,5 +48,5 @@ def listenBroker():
         displayOled()
         if not button.value():
             # Publish message if the button is pressed
-            tim.init(mode=Timer.ONE_SHOT, period=100, callback=lambda t:publishMsg())     
+            tim.init(mode=Timer.ONE_SHOT, period=100, callback=lambda t:publishMsg())    
     
