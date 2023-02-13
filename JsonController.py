@@ -10,4 +10,4 @@ def readJson():
       
     # Closing file
     f.close()
-    return data[0]
+    return json.dumps(data[0])
