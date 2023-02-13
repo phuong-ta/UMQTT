@@ -8,7 +8,7 @@ HEIGHT = 64 # oled display height
 i2c = I2C(1, scl=Pin(15), sda=Pin(14), freq=200000)  
 
 oled = SSD1306_I2C(WIDTH, HEIGHT, i2c) # Init oled display
-LedData = ["D1;50%", "D2;50%", "D3;50%", "D4;50%"] # create list to store Leds and Led's values
+LedData = ["D1;100%", "D2;50%", "D3;50%", "D4;50%"] # create list to store Leds and Led's values
 IP = "IP:"
 def updateIP(IpAddress):
     global IP
@@ -31,9 +31,9 @@ def displayOled():
      # Add some text (X,Y)
     oled.text(IP,0,5)
     oled.text(LedData[0],0,15)
-    oled.text(LedData[1],50,15)
+    oled.text(LedData[1],60,15)
     oled.text(LedData[2],0,25)
-    oled.text(LedData[3],50,25)
+    oled.text(LedData[3],60,25)
 
     # Finally update the oled display so the image & text is displayed
     oled.show()
