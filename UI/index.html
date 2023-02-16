@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.css" rel="stylesheet"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.js"></script>
+</head>
+<body>
+    <main>
+        <div id="LED-container"></div>
+    </main>
+</body>
+<script>
+    (() => {
+    const msgContainer = document.getElementById('LED-container');
+    fetch('/devices')
+            .then(res => res.json())
+            .then(messages => {
+              for (const msg of messages) {
+                const msgElement = document.createElement('div')
+                msgElement.innerHTML = `
+                <div>
+                    <p id=${msg.device}>${msg.device}</p> 
+                    <input id=${msg.id} type="range" min="0" max="100" value="0" step="1" />
+                    <br>
+                </div>
+				`
+                msgContainer.appendChild(msgElement);
+                var element = document.getElementById(`${msg.id}`);
+                
+                element.addEventListener('input', e => {
+                    e.preventDefault();
+                    var LedName = document.getElementById(`${msg.device}`);
+                    
+                    fetch('/', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                        topic:"Phuong/LED",
+                        msg: LedName.innerHTML+";"+e.target.value+"%" 
+                        })
+                    })
+                    .then(res => {
+                        if (res.status === 200) {
+                            console.log("ok");
+                        }else {
+                        return res.status;
+                        }
+                    })
+                    .catch(err => console.error(err));
+                });
+
+              }
+            });
+    }).call({});
+
+</script>
+</html>
